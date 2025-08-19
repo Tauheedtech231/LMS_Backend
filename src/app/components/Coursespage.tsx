@@ -179,7 +179,7 @@ const CoursesPage = () => {
               transition={{ delay: 0.5 }}
               className="text-gray-600 mt-6 max-w-2xl mx-auto"
             >
-              Discover our most popular professional courses designed to give you the skills and knowledge needed in today's competitive job market.
+              Discover our most popular professional courses designed to give you the skills and knowledge needed in todays competitive job market.
             </motion.p>
           </div>
 
