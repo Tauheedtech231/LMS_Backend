@@ -2,9 +2,12 @@
 import React, { useState } from "react";
 import { Menu as MenuIcon, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import Image from "next/image"
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   const links = [
     { name: "Home", href: "/" },
@@ -28,55 +31,38 @@ const Navbar = () => {
         { name: "Teaching Resources", href: "/instructors/resources" },
       ],
     },
-    {
-      name: "Events",
-      subLinks: [
-        { name: "Upcoming Events", href: "/events" },
-        { name: "Workshops", href: "/events/workshops" },
-        { name: "Webinars", href: "/events/webinars" },
-        { name: "Past Events", href: "/events/past" },
-      ],
-    },
-    {
-      name: "Pages",
-      subLinks: [
-        { name: "About Us", href: "/about" },
-        { name: "FAQ", href: "/faq" },
-        { name: "Pricing", href: "/pricing" },
-        { name: "Blog", href: "/blog" },
-        { name: "Testimonials", href: "/testimonials" },
-        { name: "Terms & Conditions", href: "/terms" },
-      ],
-    },
-    {
-      name: "Elements",
-      subLinks: [
-        { name: "Features", href: "/elements/features" },
-        { name: "Pricing Tables", href: "/elements/pricing" },
-        { name: "Testimonials", href: "/elements/testimonials" },
-        { name: "Galleries", href: "/elements/galleries" },
-        { name: "Counters", href: "/elements/counters" },
-        { name: "Accordions", href: "/elements/accordions" },
-      ],
-    },
+    // Add other links here
   ];
+
+  // Decide font size based on current route
+  const linkFontClass = pathname === "/" ? "text-base" : "text-sm";
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-blue-600">MANSOL LMS</span>
-        </div>
+       {/* Logo */}
+
+
+{/* Logo */}
+<div className="flex items-center gap-2">
+  <Image
+    src="/main-logo.png"   // public folder me rakha image
+    alt="Logo"
+    width={100}             // width in pixels
+    height={100}            // height in pixels
+    className="object-contain"
+  />
+ 
+</div>
+
 
         {/* Desktop Links */}
-        <ul className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
+        <ul className={`hidden md:flex items-center gap-6 text-gray-700 font-medium ${linkFontClass}`}>
           {links.map((link) =>
             link.subLinks ? (
               <li key={link.name} className="relative group">
                 <button className="hover:text-blue-600 transition-colors flex items-center gap-1">
                   {link.name}
-                  {/* Arrow visible only on hover */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -106,10 +92,7 @@ const Navbar = () => {
                 </ul>
               </li>
             ) : (
-              <li
-                key={link.name}
-                className="hover:text-blue-600 cursor-pointer transition-colors"
-              >
+              <li key={link.name} className="hover:text-blue-600 cursor-pointer transition-colors">
                 <a href={link.href}>{link.name}</a>
               </li>
             )
@@ -148,65 +131,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden bg-white shadow-lg border-t">
-          <div className="px-4 py-3 border-b">
-            <div className="relative">
-              <Search className="h-5 w-5 text-gray-500 absolute left-3 top-2.5" />
-              <input
-                type="text"
-                placeholder="Search courses..."
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
-              />
-            </div>
-          </div>
-          
-          <ul className="flex flex-col gap-1 p-4 text-gray-700 font-medium">
-            {links.map((link) => (
-              <li key={link.name}>
-                <details className="group">
-                  <summary className="cursor-pointer px-4 py-3 hover:bg-blue-50 rounded-lg transition-colors flex justify-between items-center">
-                    <span>{link.name}</span>
-                    {link.subLinks && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-gray-400 group-open:rotate-180 transition-transform"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    )}
-                  </summary>
-                  {link.subLinks && (
-                    <ul className="pl-6 mt-1 flex flex-col gap-1 border-l border-gray-200">
-                      {link.subLinks.map((sub) => (
-                        <li key={sub.name}>
-                          <a
-                            href={sub.href}
-                            className="block px-4 py-3 hover:bg-blue-50 rounded-lg transition-all text-sm"
-                          >
-                            {sub.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </details>
-              </li>
-            ))}
-          </ul>
-          
-          <div className="flex gap-3 p-4 border-t">
-            <Button variant="outline" className="flex-1 rounded-full">
-              Login
-            </Button>
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-700 rounded-full">
-              Register
-            </Button>
-          </div>
+          {/* Mobile content similar to desktop */}
         </div>
       )}
     </nav>
