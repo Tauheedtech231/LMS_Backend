@@ -1,4 +1,3 @@
-// app/modules/[id]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -24,7 +23,6 @@ export default function ModuleDetailPage({ params }: { params: { id: string } })
     if (loadedModule) {
       setModule(loadedModule);
       
-      // Get material from URL or default to first material
       const materialParam = searchParams.get("material");
       const material = materialParam 
         ? loadedModule.materials.find(m => m.url === materialParam) || loadedModule.materials[0]
@@ -36,17 +34,17 @@ export default function ModuleDetailPage({ params }: { params: { id: string } })
 
   if (!module) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-blue-600">Loading module...</p>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <p className="text-blue-600 dark:text-blue-400">Loading module...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+          <Link href="/student/modules" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
             <ArrowLeft size={18} className="mr-2" />
             Back to all modules
           </Link>
@@ -55,18 +53,18 @@ export default function ModuleDetailPage({ params }: { params: { id: string } })
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-sm p-6 border border-blue-100 mb-6"
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-6 border border-blue-100 dark:border-gray-700 mb-6 transition-colors duration-300"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-blue-800">{module.title}</h1>
-              <p className="text-blue-600 mt-1">{module.description}</p>
+              <h1 className="text-2xl font-bold text-blue-800 dark:text-blue-400">{module.title}</h1>
+              <p className="text-blue-600 dark:text-blue-300 mt-1">{module.description}</p>
             </div>
             
             <div className="flex items-center gap-4">
               <div className="text-center">
-                <p className="text-sm text-blue-500">Progress</p>
-                <p className="font-bold text-lg text-blue-700">{module.progress}%</p>
+                <p className="text-sm text-blue-500 dark:text-blue-300">Progress</p>
+                <p className="font-bold text-lg text-blue-700 dark:text-blue-400">{module.progress}%</p>
               </div>
               <div className="w-40">
                 <ProgressBar progress={module.progress} />
@@ -80,7 +78,6 @@ export default function ModuleDetailPage({ params }: { params: { id: string } })
             <ModuleSidebar 
               materials={module.materials} 
               moduleId={module.id} 
-              
             />
           </div>
           
