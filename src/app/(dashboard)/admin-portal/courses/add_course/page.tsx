@@ -21,7 +21,7 @@ const AddCourseForm: React.FC = () => {
   const [courseData, setCourseData] = useState<Omit<Course, "id">>({
     title: "",
     description: "",
-    instructor: "",
+    instructor: null,
     duration: 0,
     enrollmentCount: 0,
     modules: [],
@@ -104,7 +104,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     if (res.ok) {
       alert("Course added successfully!");
-      setCourseData({ title: "", description: "", instructor: "", duration: 0, enrollmentCount: 0, modules: [] });
+      setCourseData({ title: "", description: "", instructor: null, duration: 0, enrollmentCount: 0, modules: [] });
       setModules([{ id: Date.now().toString(), title: "", content: "" }]);
       router.push("/admin-portal/courses");
     } else {
@@ -151,7 +151,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           {/* Instructor Dropdown */}
         <select
   name="instructor"
-  value={courseData.instructor}
+  value={courseData.instructor?.id ?? " " }
   onChange={handleCourseChange}
   className="
     w-full p-2 border rounded
