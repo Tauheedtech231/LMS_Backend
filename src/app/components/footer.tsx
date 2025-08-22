@@ -13,20 +13,14 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
-  const quickLinks = [
-    { name: "About Us", href: "#" },
-    { name: "Courses", href: "#" },
-    { name: "Instructors", href: "#" },
-    { name: "Pricing", href: "#" },
-    { name: "Blog", href: "#" },
-  ];
-
-  const supportLinks = [
-    { name: "Help Center", href: "#" },
-    { name: "FAQs", href: "#" },
-    { name: "Terms of Service", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Contact Support", href: "#" },
+  const courseLinks = [
+    { name: "BOSH – Basic Occupational Safety & Health", href: "#" },
+    { name: "IOSH – Institution of Occupational Safety & Health", href: "#" },
+    { name: "OSHA – Occupational Safety & Health Administration", href: "#" },
+    { name: "PTW – Permit to Work", href: "#" },
+    { name: "Fire Safety – FA Training", href: "#" },
+    { name: "First Aid – FS Training", href: "#" },
+    { name: "Hole Watcher – HW Training", href: "#" },
   ];
 
   const socialLinks = [
@@ -39,9 +33,9 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 dark:bg-gray-950 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {/* Brand Info */}
-          <div className="lg:col-span-1">
+          <div>
             <div className="flex items-center mb-6">
               <FaGraduationCap className="text-3xl mr-3 text-yellow-400" />
               <h3 className="text-2xl font-bold text-white">EduMentor</h3>
@@ -63,33 +57,13 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="lg:col-span-1">
+          {/* Courses / Quick Links */}
+          <div>
             <h4 className="text-lg font-semibold text-white mb-6 relative pb-2 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-12 after:bg-yellow-400">
-              Quick Links
+              Courses
             </h4>
             <ul className="space-y-3">
-              {quickLinks.map((link, idx) => (
-                <li key={idx}>
-                  <a
-                    href={link.href}
-                    className="flex items-center text-sm transition-all hover:text-yellow-400 group"
-                  >
-                    <FaArrowRight className="mr-2 text-yellow-400 text-xs transition-transform group-hover:translate-x-1" />
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div className="lg:col-span-1">
-            <h4 className="text-lg font-semibold text-white mb-6 relative pb-2 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-12 after:bg-yellow-400">
-              Support
-            </h4>
-            <ul className="space-y-3">
-              {supportLinks.map((link, idx) => (
+              {courseLinks.map((link, idx) => (
                 <li key={idx}>
                   <a
                     href={link.href}
@@ -104,7 +78,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="lg:col-span-1">
+          <div>
             <h4 className="text-lg font-semibold text-white mb-6 relative pb-2 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-12 after:bg-yellow-400">
               Contact Us
             </h4>
@@ -125,21 +99,6 @@ const Footer = () => {
                 <span className="text-sm">info@edumentor.com</span>
               </li>
             </ul>
-
-            {/* Newsletter Subscription */}
-            <div className="mt-8">
-              <h5 className="text-sm font-semibold text-white mb-3">Subscribe to our newsletter</h5>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="bg-gray-800 text-sm py-3 px-4 rounded-l-md focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
-                />
-                <button className="bg-yellow-500 text-gray-900 font-medium py-3 px-4 rounded-r-md text-sm hover:bg-yellow-400 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 

@@ -63,10 +63,7 @@ function getIcon(icon: string): LucideIcon {
       return Icons.users;
     case "file":
       return Icons.file;
-    case "message":
-      return Icons.message;
-    case "settings":
-      return Icons.settings;
+   
     default:
       return Icons.dashboard;
   }

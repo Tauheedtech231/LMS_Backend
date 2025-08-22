@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu as MenuIcon, X, Search, Sun, Moon } from "lucide-react";
+import { Menu as MenuIcon, X,  Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -52,19 +52,26 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
-        <div
-          className={`flex items-center gap-2 rounded-md p-1 ${
-            theme === "dark" ? "bg-blue-600" : "bg-white"
-          }`}
-        >
-          <Image
-            src="/main-logo.png"
-            alt="Logo"
-            width={100}
-            height={100}
-            className="object-contain"
-          />
-        </div>
+     {/* Logo */}
+{/* Logo */}
+{/* Logo */}
+<div
+  className={`flex items-center gap-2 p-2 rounded-full ${
+    theme === "dark"
+      ? "bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600" // dark mode: attractive blue gradient
+      : "bg-white" // light mode: white background
+  }`}
+>
+  <Image
+    src="/main-logo.png"
+    alt="Logo"
+    width={100}
+    height={100}
+    className="object-contain"
+  />
+</div>
+
+
 
         {/* Desktop Links */}
         <ul className={`hidden md:flex items-center gap-6 font-medium ${linkFontClass}`}>

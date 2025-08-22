@@ -14,7 +14,7 @@ import {
   LogOut,
   UserCog,
   Receipt,
-  List
+  
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -55,8 +55,7 @@ export default function Sidebar() {
   { name: "Courses", href: "/admin-portal/courses", icon: <BookOpen size={16} /> },
   { name: "Instructors", href: "/admin-portal/instructor", icon: <UserCog size={16} /> },
   { name: "Fee Verification", href: "/admin-portal/fee-verification", icon: <Receipt size={16} /> },
-  { name: "Reports", href: "/admin-portal/reports", icon: <FileText size={16} /> },
-  { name: "Logs", href: "/admin-portal/analytics", icon: <List size={16} /> },
+  
 ];
 
   return (

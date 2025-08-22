@@ -16,9 +16,9 @@ export default function DashboardPage() {
     async function loadData() {
       try {
         const [studentsRes, coursesRes, engagementRes] = await Promise.all([
-          fetch("/data/students.json"),
-          fetch("/data/courses.json"),
-          fetch("/data/engagement.json"),
+          fetch("http://localhost:5000/api/dashboard/students"),
+          fetch("http://localhost:5000/api/dashboard/courses"),
+          fetch("http://localhost:5000/api/dashboard/engagement"),
         ]);
 
         const [studentsData, coursesData, engagementData] = await Promise.all([
@@ -27,9 +27,9 @@ export default function DashboardPage() {
           engagementRes.json(),
         ]);
 
-        setStudents(studentsData);
-        setCourses(coursesData);
-        setEngagement(engagementData);
+        setStudents(studentsData.data || []);
+        setCourses(coursesData.data || []);
+        setEngagement(engagementData.data || []);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -39,6 +39,13 @@ export default function DashboardPage() {
 
     loadData();
   }, []);
+  const time = engagement.length > 0 
+  ? Math.round(engagement.reduce((acc, e) => acc + (e.timeSpent || 0), 0) / engagement.length)
+  : 0;
+    const totalActiveStudents = engagement.reduce((acc, a) => acc + (a.activeStudents || 0), 0);
+
+  const avgEngagement = totalActiveStudents > 0 ? Math.round(time / totalActiveStudents) : 0;
+
 
   if (loading) {
     return (
@@ -54,9 +61,8 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen p-6  text-sm  transition-colors duration-300">
-      {/* Dashboard Heading */}
-      <h2 className="text-2xl font-semibold mb-4 text-[blue]">
+    <div className="min-h-screen p-6 text-sm transition-colors duration-300">
+      <h2 className="text-2xl font-semibold mb-4 text-blue-600">
         Admin Dashboard
       </h2>
 
@@ -65,8 +71,7 @@ export default function DashboardPage() {
         students={students.length}
         revenue={totalRevenue}
         courses={courses.length}
-        engagement={85}
-        
+        engagement={avgEngagement}
       />
 
       {/* Charts */}
@@ -74,8 +79,6 @@ export default function DashboardPage() {
         <EngagementStats data={engagement} />
         <PerformanceChart data={engagement} />
       </div>
-
-    
     </div>
   );
 }

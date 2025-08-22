@@ -1,60 +1,56 @@
-// components/InstructorForm.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Instructor } from "../../types";
-import { Course } from "../../types";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const LOCAL_STORAGE_KEY = "instructors";
-
 const InstructorForm: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [formData, setFormData] = useState<Omit<Instructor, "id">>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     bio: "",
-    courses: [],
     avatar: "",
   });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Fetch courses from public/data/courses.json
-  useEffect(() => {
-    fetch("/data/courses.json")
-      .then((res) => res.json())
-      .then((data: Course[]) => setCourses(data))
-      .catch((err) => console.error("Failed to fetch courses:", err));
-  }, []);
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
-    if (name === "courses") {
-      // store as array (single selection)
-      setFormData({ ...formData, courses: [value] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newInstructor: Instructor = { id: Date.now().toString(), ...formData };
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const instructors: Instructor[] = stored ? JSON.parse(stored) : [];
-    instructors.push(newInstructor);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(instructors));
-    setFormData({ name: "", email: "", bio: "", courses: [], avatar: "" });
-    router.push("/admin-portal/instructor");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/instructors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add instructor");
+      }
+
+      await response.json();
+      router.push("/admin-portal/instructor");
+    } catch (error) {
+      console.error(error);
+      alert("Error adding instructor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg text-white">
-        <h2 className="text-xl font-semibold mb-4 text-blue-400">Add Instructor</h2>
+        <h2 className="text-xl font-semibold mb-4 text-blue-400">
+          Add Instructor
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-3 text-sm">
           <input
@@ -66,6 +62,7 @@ const InstructorForm: React.FC = () => {
             className="w-full p-2 border border-gray-700 rounded bg-gray-900 text-white placeholder-gray-400"
             required
           />
+
           <input
             type="email"
             name="email"
@@ -75,6 +72,7 @@ const InstructorForm: React.FC = () => {
             className="w-full p-2 border border-gray-700 rounded bg-gray-900 text-white placeholder-gray-400"
             required
           />
+
           <textarea
             name="bio"
             value={formData.bio}
@@ -83,22 +81,7 @@ const InstructorForm: React.FC = () => {
             className="w-full p-2 border border-gray-700 rounded bg-gray-900 text-white placeholder-gray-400"
             required
           />
-          <select
-            name="courses"
-            value={formData.courses[0] || ""}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-700 rounded bg-gray-900 text-white placeholder-gray-400"
-            required
-          >
-            <option value="" disabled>
-              Select Course
-            </option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.title}
-              </option>
-            ))}
-          </select>
+
           <input
             type="text"
             name="avatar"
@@ -107,11 +90,13 @@ const InstructorForm: React.FC = () => {
             placeholder="Avatar URL (optional)"
             className="w-full p-2 border border-gray-700 rounded bg-gray-900 text-white placeholder-gray-400"
           />
+
           <button
             type="submit"
-            className="w-full p-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition"
+            disabled={loading}
+            className="w-full p-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50"
           >
-            Add Instructor
+            {loading ? "Adding..." : "Add Instructor"}
           </button>
         </form>
       </div>

@@ -42,7 +42,7 @@ const InstructorTable: React.FC<InstructorTableProps> = ({ instructors }) => {
             <tr className="text-xs font-semibold tracking-wide text-left text-blue-600 uppercase border-b dark:border-gray-700 dark:text-blue-300 bg-gray-50 dark:bg-gray-900">
               <th className="px-3 py-2">Instructor</th>
               <th className="px-3 py-2">Email</th>
-              <th className="px-3 py-2">Courses</th>
+              <th className="px-3 py-2">Bio</th>
               <th className="px-3 py-2">Actions</th>
             </tr>
           </thead>
@@ -67,11 +67,8 @@ const InstructorTable: React.FC<InstructorTableProps> = ({ instructors }) => {
                   </div>
                 </td>
                 <td className="px-3 py-2 text-sm">{instructor.email}</td>
-                <td className="px-3 py-2 text-xs">
-                  <span className="px-2 py-1 font-semibold text-white bg-blue-500 rounded-full shadow-sm">
-                    {instructor.courses.length}
-                  </span>
-                </td>
+                <td className="px-3 py-2 text-sm">{instructor.bio}</td>
+                
                 <td className="px-3 py-2 text-sm">
                   <Link href={`/admin-portal/instructor/${instructor.id}`}>
                     <button className="px-2 py-1 text-xs font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-colors duration-200">

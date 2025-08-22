@@ -20,7 +20,7 @@ const CourseDetail: React.FC<CourseDetailProps> = ({ course }) => {
         {/* Badges */}
         <div className="flex flex-wrap gap-2 mt-4">
           <span className="px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-blue-700 rounded-full shadow-sm">
-            Instructor: {course.instructor}
+            Instructor: {course.instructor?.name}
           </span>
           <span className="px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-green-400 to-green-600 rounded-full shadow-sm">
             Duration: {course.duration}h

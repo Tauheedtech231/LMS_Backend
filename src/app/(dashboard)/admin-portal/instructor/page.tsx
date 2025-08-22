@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import InstructorTable from "../components/InstructorTable";
 import { Instructor } from "../types";
 
-const LOCAL_STORAGE_KEY = "instructors";
-
 export default function InstructorsPage() {
   const [instructors, setInstructors] = useState<Instructor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +11,10 @@ export default function InstructorsPage() {
   useEffect(() => {
     async function fetchInstructors() {
       try {
-        // Simulate network delay for demonstration
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const response = await fetch("http://localhost:5000/api/instructors");
+        if (!response.ok) throw new Error("Failed to fetch instructors");
 
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const data: Instructor[] = stored ? JSON.parse(stored) : [];
+        const data: Instructor[] = await response.json();
         setInstructors(data);
       } catch (error) {
         console.error("Error fetching instructors:", error);
@@ -49,7 +46,10 @@ export default function InstructorsPage() {
             {/* Table Header */}
             <div className="grid grid-cols-5 gap-4 px-4 py-3 bg-gray-100 dark:bg-gray-700">
               {[1, 2, 3, 4, 5].map((item) => (
-                <div key={item} className="h-6 bg-gray-300 rounded dark:bg-gray-600"></div>
+                <div
+                  key={item}
+                  className="h-6 bg-gray-300 rounded dark:bg-gray-600"
+                ></div>
               ))}
             </div>
 
@@ -62,7 +62,10 @@ export default function InstructorsPage() {
                     <div className="h-4 bg-gray-300 rounded dark:bg-gray-600 w-3/4"></div>
                   </div>
                   {[1, 2, 3, 4].map((col) => (
-                    <div key={col} className="h-4 bg-gray-300 rounded dark:bg-gray-600"></div>
+                    <div
+                      key={col}
+                      className="h-4 bg-gray-300 rounded dark:bg-gray-600"
+                    ></div>
                   ))}
                 </div>
               ))}

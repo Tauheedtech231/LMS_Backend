@@ -6,6 +6,8 @@ import coursesRoutes from './routes/courseRoutes.js'
 import studentsRoutes from './routes/studentRoute.js'
 import engagementRoutes  from './routes/engagementRoutes.js'
 import instructorRoutes from "./routes/instructorRoutes.js";
+import paymentRoutes from './routes/paymentRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js'
 
 
 import { createClient } from '@supabase/supabase-js';
@@ -33,6 +35,9 @@ app.use("/api/courses", coursesRoutes);
 app.use("/api/students", studentsRoutes);
 app.use("/api/engagement", engagementRoutes);
 app.use("/api/instructors", instructorRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
 
 
 // Start server

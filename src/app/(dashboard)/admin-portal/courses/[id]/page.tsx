@@ -5,8 +5,6 @@ import { useParams } from "next/navigation";
 import { Course } from "../../types";
 import CourseDetail from "../../components/Coursedetails";
 
-const LOCAL_STORAGE_KEY = "courses";
-
 export default function CoursePage() {
   const { id } = useParams<{ id: string }>();
   const [course, setCourse] = useState<Course | null>(null);
@@ -16,15 +14,16 @@ export default function CoursePage() {
     async function fetchCourse() {
       try {
         setLoading(true);
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const courses: Course[] = stored ? JSON.parse(stored) : [];
-        const found = courses.find((c) => c.id === id) || null;
-        setCourse(found);
+        // ✅ Fetch from backend API
+        const res = await fetch(`http://localhost:5000/api/courses/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch course");
+
+        const data: Course = await res.json();
+        setCourse(data);
       } catch (error) {
         console.error("Error fetching course:", error);
+        setCourse(null);
       } finally {
         setLoading(false);
       }
@@ -36,34 +35,11 @@ export default function CoursePage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-6">
-        {/* Loading Skeleton */}
+        {/* Skeleton Loader */}
         <div className="animate-pulse">
           <div className="h-8 bg-gray-300 rounded dark:bg-gray-700 w-3/4 mb-4"></div>
           <div className="h-4 bg-gray-300 rounded dark:bg-gray-700 w-1/2 mb-6"></div>
           <div className="h-64 bg-gray-300 rounded-lg dark:bg-gray-700 mb-6"></div>
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="md:col-span-2">
-              <div className="h-6 bg-gray-300 rounded dark:bg-gray-700 w-32 mb-4"></div>
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((item) => (
-                  <div key={item} className="h-4 bg-gray-300 rounded dark:bg-gray-700" style={{ width: `${100 - item * 10}%` }}></div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="h-6 bg-gray-300 rounded dark:bg-gray-700 w-32 mb-4"></div>
-              <div className="p-4 bg-gray-100 rounded-lg dark:bg-gray-700">
-                <div className="space-y-3">
-                  {[1, 2, 3].map((item) => (
-                    <div key={item} className="flex items-center">
-                      <div className="h-4 w-4 bg-gray-300 rounded dark:bg-gray-600 mr-2"></div>
-                      <div className="h-3 bg-gray-300 rounded dark:bg-gray-600 w-3/4"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );

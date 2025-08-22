@@ -13,8 +13,7 @@ export default function InstructorLayout({
     { title: "Courses", href: "/instructor/courses", icon: "book" },
     { title: "Students", href: "/instructor/students", icon: "users" },
     { title: "Assignments", href: "/instructor/assignments", icon: "file" },
-    { title: "Feedback", href: "/instructor/feedback", icon: "message" },
-    { title: "Settings", href: "/instructor/settings", icon: "settings" },
+    
   ];
 
   return (

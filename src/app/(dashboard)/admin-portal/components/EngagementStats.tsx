@@ -10,6 +10,7 @@ interface EngagementStatsProps {
 }
 
 const EngagementStats: React.FC<EngagementStatsProps> = ({ data }) => {
+  console.log("the data",data)
   const latest = data[data.length - 1];
 
   return (

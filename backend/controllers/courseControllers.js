@@ -43,13 +43,15 @@ export const getCourses = async (req, res) => {
 
 // ADD new course with modules
 export const addCourse = async (req, res) => {
-  const { title, description, instructor_id, duration, enrollment_count, modules } = req.body;
+    
+  const { title, description, instructor_id, duration,enrollment_count, modules } = req.body;
+  console.log("the ",req.body)
 
   try {
     // Insert course
     const { data: courseData, error: courseError } = await supabase
       .from("courses")
-      .insert([{ title, description, instructor_id, duration, enrollment_count }])
+      .insert([{ title, description, instructor_id, duration,enrollmentCount:enrollment_count }])
       .select()
       .single();
 
@@ -73,5 +75,52 @@ export const addCourse = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to add course" });
+  }
+};
+
+
+
+export const getCourseById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Fetch course with instructor
+    const { data: course, error: courseError } = await supabase
+      .from("courses")
+      .select(`
+        *,
+        instructors:instructor_id (
+          id,
+          name,
+          email,
+          bio,
+          avatar
+        )
+      `)
+      .eq("id", id)
+      .single();
+
+    if (courseError) throw courseError;
+    if (!course) return res.status(404).json({ error: "Course not found" });
+
+    // Fetch modules for this course
+    const { data: modules, error: modulesError } = await supabase
+      .from("modules")
+      .select("*")
+      .eq("course_id", id);
+
+    if (modulesError) throw modulesError;
+
+    // Build response
+    const courseWithModules = {
+      ...course,
+      instructor: course.instructors || null,
+      modules: modules || [],
+    };
+
+    res.json(courseWithModules);
+  } catch (err) {
+    console.error("Error fetching course:", err);
+    res.status(500).json({ error: "Failed to fetch course" });
   }
 };

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { useTheme } from "next-themes";
 

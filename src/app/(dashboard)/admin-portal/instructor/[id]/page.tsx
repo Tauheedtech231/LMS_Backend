@@ -1,12 +1,10 @@
 "use client";
+/* eslint-disable */
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import InstructorProfile from "../../components/InstructorProfile";
 import { Instructor, Course } from "../../types";
-
-const LOCAL_STORAGE_INSTRUCTORS_KEY = "instructors";
-const LOCAL_STORAGE_COURSES_KEY = "courses";
 
 export default function InstructorPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,28 +17,32 @@ export default function InstructorPage() {
     async function fetchData() {
       try {
         setLoading(true);
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Get instructors from localStorage
-        const storedInstructors = localStorage.getItem(LOCAL_STORAGE_INSTRUCTORS_KEY);
-        const instructors: Instructor[] = storedInstructors ? JSON.parse(storedInstructors) : [];
+        // Call API (Express/Supabase route)
+        const res = await fetch(`http://localhost:5000/api/instructors/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch instructor data");
 
-        // Get courses from localStorage
-        const storedCourses = localStorage.getItem(LOCAL_STORAGE_COURSES_KEY);
-        const allCourses: Course[] = storedCourses ? JSON.parse(storedCourses) : [];
+        const data = await res.json();
 
-        // Find the instructor
-        const foundInstructor = instructors.find((i) => i.id === id) || null;
-        setInstructor(foundInstructor);
+        setInstructor({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          bio: data.bio,
+          avatar: data.avatar,
+          courses: data.courses.map((c: any) => c.id), // store course IDs
+        });
 
-        if (foundInstructor) {
-          // Filter courses taught by this instructor
-          const instructorCourses = allCourses.filter(
-            (c) => c.instructor === foundInstructor.id
-          );
-          setCourses(instructorCourses);
-        }
+        setCourses(
+          data.courses.map((c: any) => ({
+            id: c.id,
+            title: c.title,
+            description: c.description,
+            duration: c.duration,
+            enrollmentCount: c.enrollment_count,
+            instructor: data.id,
+          }))
+        );
       } catch (error) {
         console.error("Error fetching instructor data:", error);
       } finally {
@@ -70,8 +72,8 @@ export default function InstructorPage() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           The instructor you&apos;re looking for doesn&apos;t exist or may have been removed.
         </p>
-        <button 
-          onClick={() => window.history.back()} 
+        <button
+          onClick={() => window.history.back()}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Go Back

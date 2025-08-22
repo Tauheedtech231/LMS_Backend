@@ -1,78 +1,83 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Clock, DollarSign, BookOpen, CheckCircle,  ArrowRight } from "lucide-react";
+import { Clock, BookOpen, CheckCircle, ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const CoursesPage = () => {
   const { theme } = useTheme();
+  const router=useRouter()
 
   const courses = [
     {
-      name: "Web Development Bootcamp",
-      duration: "12 Weeks",
-      fee: "$499",
-      requirements: "Basic HTML & CSS knowledge",
-      category: "Development",
+      name: "BOSH – Basic Occupational Safety & Health",
+      duration: "40 Hours",
+      requirements: "None",
+      category: "Safety",
       level: "Beginner",
       rating: 4.8,
     },
     {
-      name: "AI & Machine Learning",
-      duration: "16 Weeks",
-      fee: "$799",
-      requirements: "Python Basics",
-      category: "Data Science",
-      level: "Advanced",
-      rating: 4.9,
-    },
-    {
-      name: "UI/UX Design",
-      duration: "10 Weeks",
-      fee: "$399",
-      requirements: "Creativity & Design Tools",
-      category: "Design",
+      name: "IOSH – Institution of Occupational Safety & Health",
+      duration: "30 Hours",
+      requirements: "Basic safety knowledge",
+      category: "Safety",
       level: "Intermediate",
       rating: 4.7,
     },
     {
-      name: "Cloud Computing",
-      duration: "14 Weeks",
-      fee: "$699",
-      requirements: "Networking basics",
-      category: "IT & Software",
+      name: "OSHA – Occupational Safety & Health Administration",
+      duration: "36 Hours",
+      requirements: "None",
+      category: "Safety",
+      level: "Beginner",
+      rating: 4.9,
+    },
+    {
+      name: "PTW – Permit to Work",
+      duration: "24 Hours",
+      requirements: "Safety awareness",
+      category: "Safety",
       level: "Intermediate",
       rating: 4.6,
     },
     {
-      name: "Data Science",
-      duration: "18 Weeks",
-      fee: "$899",
-      requirements: "Statistics & Python",
-      category: "Data Science",
-      level: "Advanced",
+      name: "Fire Safety – FA Training",
+      duration: "20 Hours",
+      requirements: "None",
+      category: "Emergency",
+      level: "Beginner",
+      rating: 4.8,
+    },
+    {
+      name: "First Aid – FS Training",
+      duration: "28 Hours",
+      requirements: "None",
+      category: "Emergency",
+      level: "Beginner",
       rating: 4.9,
     },
     {
-      name: "Mobile App Development",
-      duration: "12 Weeks",
-      fee: "$599",
-      requirements: "Basic programming knowledge",
-      category: "Development",
+      name: "Hole Watcher – HW Training",
+      duration: "16 Hours",
+      requirements: "Safety awareness",
+      category: "Safety",
       level: "Intermediate",
-      rating: 4.7,
+      rating: 4.5,
     },
   ];
 
-  // Placeholder images
+  // Course images based on course content
   const courseImages = [
-    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1470&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=1374&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1400&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1470&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1470&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=1470&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1480&auto=format&fit=crop", // Safety gear
+    "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1480&auto=format&fit=crop", // Workplace safety
+    "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=1480&auto=format&fit=crop", // Safety training
+    "https://images.unsplash.com/photo-1581092581022-6ae5c5ee6f2f?q=80&w=1480&auto=format&fit=crop", // Construction safety
+    "https://images.unsplash.com/photo-1584697964358-3e14ca57658b?q=80&w=1470&auto=format&fit=crop", // Fire safety
+    "https://images.unsplash.com/photo-1584697964358-3e14ca57658b?q=80&w=1470&auto=format&fit=crop", // First aid
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1470&auto=format&fit=crop", // Construction site
   ];
 
   const isDark = theme === "dark";
@@ -94,21 +99,23 @@ const CoursesPage = () => {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
-                Transform Your Career with Our <span className="text-amber-400">Professional Courses</span>
+                Advance Your Career with Our <span className="text-amber-400">Safety Courses</span>
               </h1>
               <p className="text-base text-gray-300 mb-6 max-w-2xl">
-                Join thousands of professionals who have accelerated their careers with our industry-leading courses. Learn from experts and gain practical skills.
+                Join thousands of professionals who have enhanced their safety skills with our industry-leading courses. Learn from experts and gain practical knowledge.
               </p>
               <div className="flex flex-wrap gap-3">
-               <Link href='/course_for_sell'> <motion.button 
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm"
-                >
-                  Explore Courses <ArrowRight size={16} />
-                </motion.button></Link>
-               
-              </div>
+  <Link href="/course_for_sell">
+    <motion.button
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.98 }}
+      className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold px-5 py-2.5 rounded-full flex items-center gap-2 text-sm"
+    >
+      Explore Courses <ArrowRight size={16} />
+    </motion.button>
+  </Link>
+</div>
+
             </motion.div>
 
             <motion.div 
@@ -127,12 +134,12 @@ const CoursesPage = () => {
                       <h3 className="text-lg font-bold">Course Highlights</h3>
                     </div>
                     <div className="text-amber-400 flex items-center">
-                      <span className="text-base font-bold">4.9</span>
+                      <span className="text-base font-bold">4.8</span>
                       <span className="text-gray-400 ml-1 text-sm">/5.0</span>
                     </div>
                   </div>
                   <div className="space-y-2.5">
-                    {[ "Industry-recognized certifications", "Hands-on projects & case studies", "1-on-1 mentorship sessions", "Career support and guidance", "Flexible learning schedule" ].map((text, i) => (
+                    {[ "Industry-recognized certifications", "Hands-on training & practical skills", "Expert instructors", "Career advancement opportunities", "Flexible learning schedule" ].map((text, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm">
                         <CheckCircle size={16} className="text-green-400" />
                         <span className={isDark ? "text-gray-200" : "text-gray-100"}>{text}</span>
@@ -166,7 +173,6 @@ const CoursesPage = () => {
                     alt={course.name}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
-                  <div className="absolute top-3 right-3 bg-amber-500 text-gray-900 font-bold px-2 py-0.5 rounded-full text-xs">{course.fee}</div>
                   <div className="absolute bottom-3 left-3 bg-indigo-600 text-white px-2 py-0.5 rounded-full text-xs">{course.category}</div>
                 </div>
 
@@ -198,16 +204,20 @@ const CoursesPage = () => {
                       <Clock className="w-4 h-4 text-indigo-600" /> Duration: {course.duration}
                     </div>
                     <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-indigo-600" /> Fee: {course.fee}
-                    </div>
-                    <div className="flex items-center gap-2">
                       <BookOpen className="w-4 h-4 text-indigo-600" /> Requirements: {course.requirements}
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <motion.button whileHover={{ scale: 1.02 }} className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded text-sm">Enroll Now</motion.button>
-                    <motion.button whileHover={{ scale: 1.02 }} className={`${isDark ? "border-gray-600 text-gray-200 hover:bg-gray-700" : "border-gray-300 text-gray-700 hover:bg-gray-50"} border flex-1 py-2 rounded text-sm`}>View Details</motion.button>
+                  <div className="flex gap-2" >
+                    <motion.button 
+                    onClick={(()=>{
+                      router.push('/course_for_sell')
+                    })}
+                      whileHover={{ scale: 1.02 }} 
+                      className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-full text-sm"
+                    >
+                      Enroll Now
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>
