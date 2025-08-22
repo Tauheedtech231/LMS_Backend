@@ -14,31 +14,31 @@ const Navbar = () => {
 
   useEffect(() => setMounted(true), []);
 
-const links = [
-  { name: "Home", href: "/" },
-  {
-    name: "Courses",
-    subLinks: [
-      { name: "BOSH – Basic Occupational Safety & Health", href: "/courses/bosh" },
-      { name: "IOSH – Institution of Occupational Safety & Health", href: "/courses/iosh" },
-      { name: "OSHA – Occupational Safety & Health Administration", href: "/courses/osha" },
-      { name: "PTW – Permit to Work", href: "/courses/ptw" },
-      { name: "Fire Safety – FA Training", href: "/courses/fire-safety" },
-      { name: "First Aid – FS Training", href: "/courses/first-aid" },
-      { name: "Hole Watcher – HW Training", href: "/courses/hole-watcher" },
-    ],
-  },
-  {
-    name: "Instructors",
-    subLinks: [
-      { name: "All Instructors", href: "/instructors" },
-      { name: "Instructor Profiles", href: "/instructors/profiles" },
-      { name: "Become an Instructor", href: "/instructors/become" },
-      { name: "Teaching Resources", href: "/instructors/resources" },
-    ],
-  },
-];
-
+  const links = [
+    { name: "Home", href: "/" },
+    {
+      name: "Courses",
+      subLinks: [
+        { name: "Course Catalog", href: "/courses" },
+        { name: "BOSH – Basic Occupational Safety & Health", href: "/courses/bosh" },
+        { name: "IOSH – Institution of Occupational Safety & Health", href: "/courses/iosh" },
+        { name: "OSHA – Occupational Safety & Health Administration", href: "/courses/osha" },
+        { name: "PTW – Permit to Work", href: "/courses/ptw" },
+        { name: "Fire Safety – FA Training", href: "/courses/fire-safety" },
+        { name: "First Aid – FS Training", href: "/courses/first-aid" },
+        { name: "Hole Watcher – HW Training", href: "/courses/hole-watcher" },
+      ],
+    },
+    {
+      name: "Instructors",
+      subLinks: [
+        { name: "All Instructors", href: "/instructors" },
+        { name: "Instructor Profiles", href: "/instructors/profiles" },
+        { name: "Become an Instructor", href: "/instructors/become" },
+        { name: "Teaching Resources", href: "/instructors/resources" },
+      ],
+    },
+  ];
 
   const linkFontClass = pathname === "/" ? "text-base" : "text-sm";
 
@@ -52,7 +52,11 @@ const links = [
     >
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2 bg-white dark:bg-white rounded-md p-1">
+        <div
+          className={`flex items-center gap-2 rounded-md p-1 ${
+            theme === "dark" ? "bg-blue-600" : "bg-white"
+          }`}
+        >
           <Image
             src="/main-logo.png"
             alt="Logo"
@@ -109,8 +113,6 @@ const links = [
 
         {/* Right Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          
-
           {/* Dark/Light Toggle */}
           <Button
             variant="outline"

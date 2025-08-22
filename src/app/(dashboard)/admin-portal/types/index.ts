@@ -12,7 +12,7 @@ export interface Course {
   id: string;
   title: string;
   description: string;
-  instructor: string;
+  instructor: "";
   duration: number;
   modules: Module[];
   enrollmentCount: number;

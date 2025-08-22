@@ -3,9 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { Course } from "../../types";
 import { useRouter } from "next/navigation";
+export interface Instructor {
+  id: number;    // Database me instructor ka primary key
+  name: string;  // Instructor ka full name
+}
 
-const LOCAL_STORAGE_KEY = "courses";
-const INSTRUCTOR_KEY = "instructors"; // your instructors storage key
+
+// your instructors storage key
 
 interface ModuleForm {
   id: string;
@@ -28,14 +32,24 @@ const AddCourseForm: React.FC = () => {
     { id: Date.now().toString(), title: "", content: "" },
   ]);
 
-  const [instructors, setInstructors] = useState<string[]>([]);
+  const [instructors, setInstructors] = useState<Instructor[]>([]);
 
-  // Fetch instructors from localStorage
+  // Fetch instructors from database
   useEffect(() => {
-    const stored = localStorage.getItem(INSTRUCTOR_KEY);
-    const data: { id: string; name: string }[] = stored ? JSON.parse(stored) : [];
-    setInstructors(data.map((inst) => inst.name));
-  }, []);
+  const fetchInstructors = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/instructors");
+      const data: { id: number; name: string }[] = await res.json();
+      setInstructors(data);
+    } catch (err) {
+      console.error("Failed to fetch instructors:", err);
+    }
+  };
+
+  fetchInstructors();
+}, []);
+
+
 
   const handleCourseChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -71,32 +85,38 @@ const AddCourseForm: React.FC = () => {
     setModules(newModules);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const newCourse: Course = {
-      id: Date.now().toString(),
-      ...courseData,
-      modules,
-    };
-
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const courses: Course[] = stored ? JSON.parse(stored) : [];
-    courses.push(newCourse);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(courses));
-
-    // Reset form
-    setCourseData({
-      title: "",
-      description: "",
-      instructor: "",
-      duration: 0,
-      enrollmentCount: 0,
-      modules: [],
+  try {
+    const res = await fetch("http://localhost:5000/api/courses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: courseData.title,
+        description: courseData.description,
+        instructor_id: Number(courseData.instructor), // make sure instructor id is sent
+        duration: courseData.duration,
+        enrollment_count: courseData.enrollmentCount,
+        modules: modules.map((mod) => ({ title: mod.title, content: mod.content })),
+      }),
     });
-    setModules([{ id: Date.now().toString(), title: "", content: "" }]);
-  router.push("/admin-portal/courses");
-  };
+
+    if (res.ok) {
+      alert("Course added successfully!");
+      setCourseData({ title: "", description: "", instructor: "", duration: 0, enrollmentCount: 0, modules: [] });
+      setModules([{ id: Date.now().toString(), title: "", content: "" }]);
+      router.push("/admin-portal/courses");
+    } else {
+      const data = await res.json();
+      alert("Error: " + data.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong!");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 rounded-lg dark:bg-gray-900 flex items-center justify-center p-6">
@@ -129,22 +149,29 @@ const AddCourseForm: React.FC = () => {
           />
 
           {/* Instructor Dropdown */}
-          <select
-            name="instructor"
-            value={courseData.instructor}
-            onChange={handleCourseChange}
-            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-blue-300"
-            required
-          >
-            <option value="" disabled>
-              Select Instructor
-            </option>
-            {instructors.map((inst, idx) => (
-              <option key={idx} value={inst}>
-                {inst}
-              </option>
-            ))}
-          </select>
+        <select
+  name="instructor"
+  value={courseData.instructor}
+  onChange={handleCourseChange}
+  className="
+    w-full p-2 border rounded
+    border-gray-300 dark:border-gray-600
+    bg-white dark:bg-gray-700
+    text-gray-900 dark:text-white
+    focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+  "
+  required
+>
+  <option value="" disabled>
+    Select Instructor
+  </option>
+  {instructors.map((inst) => (
+    <option key={inst.id} value={inst.id}>
+      {inst.name}
+    </option>
+  ))}
+</select>
+
 
           <input
             type="number"

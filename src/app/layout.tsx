@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 // ShadCN Theme Provider
-import { ThemeProvider  } from "next-themes";
+import { ThemeProvider } from "@/components/theme-provider";
 
 
 const geistSans = Geist({

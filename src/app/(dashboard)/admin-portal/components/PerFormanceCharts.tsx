@@ -9,6 +9,7 @@ interface PerformanceOverviewProps {
 }
 
 const PerformanceOverview: React.FC<PerformanceOverviewProps> = ({ data }) => {
+  console.log("The data",data)
   return (
     <div className="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
       <h4 className="mb-4 font-semibold text-blue-600 dark:text-blue-400">

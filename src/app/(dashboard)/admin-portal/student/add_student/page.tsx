@@ -1,77 +1,96 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import Image from "next/image";
-import { Course } from "../../types";
 import { useRouter } from "next/navigation";
 
-export interface Student {
-  id: string;
-  name: string;
-  email: string;
-  enrolledCourse?: string; // single course
-  progress: number;
-  avatar?: string;
+export interface Course {
+  id: number;
+  title: string;
 }
 
-const LOCAL_STORAGE_KEY = "students";
-const LOCAL_STORAGE_COURSES_KEY = "courses";
+export interface StudentFormData {
+  name: string;
+  email: string;
+  progress: number;
+  avatar?: string;
+  enrolledCourses: number[]; // multiple courses
+}
 
 const StudentForm: React.FC = () => {
-  const [formData, setFormData] = useState<Omit<Student, "id">>({
+  const [formData, setFormData] = useState<StudentFormData>({
     name: "",
     email: "",
-    enrolledCourse: "",
     progress: 0,
     avatar: "",
+    enrolledCourses: [],
   });
 
   const [courses, setCourses] = useState<Course[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    // Fetch courses from localStorage
-    const storedCourses = localStorage.getItem(LOCAL_STORAGE_COURSES_KEY);
-    const allCourses: Course[] = storedCourses ? JSON.parse(storedCourses) : [];
-    setCourses(allCourses);
-  }, []);
+  // Fetch courses from backend
+useEffect(() => {
+  fetch("http://localhost:5000/api/courses")
+    .then((res) => res.json())
+    .then((data: Course[]) => setCourses(data))
+    .catch((err) => console.error(err));
+}, []);
+
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, } = e.target;
     if (name === "progress") {
       setFormData({ ...formData, progress: Number(value) });
+    } else if (name === "enrolledCourses") {
+      const selectedOptions = Array.from(
+        (e.target as HTMLSelectElement).selectedOptions,
+        (option) => Number(option.value)
+      );
+      setFormData({ ...formData, enrolledCourses: selectedOptions });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const newStudent: Student = { id: Date.now().toString(), ...formData };
 
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const students: Student[] = stored ? JSON.parse(stored) : [];
-    students.push(newStudent);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(students));
+    try {
+      const res = await fetch("http://localhost:5000/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    setFormData({ name: "", email: "", enrolledCourse: "", progress: 0, avatar: "" });
-    router.push("/admin-portal/student");
+      if (res.ok) {
+        alert("Student added successfully!");
+        setFormData({ name: "", email: "", progress: 0, avatar: "", enrolledCourses: [] });
+        router.push("/admin-portal/student");
+      } else {
+        const data = await res.json();
+        alert("Error: " + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong!");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
       <div className="w-full max-w-md p-6 bg-gray-800 rounded-2xl shadow-lg text-white text-sm">
         <h2 className="text-lg font-semibold mb-4 text-blue-400">Add Student</h2>
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3 text-sm">
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="Name"
-            className="w-full p-3 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400"
+            className="w-full p-2 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400 text-sm"
             required
           />
           <input
@@ -80,60 +99,55 @@ const StudentForm: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             placeholder="Email"
-            className="w-full p-3 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400"
+            className="w-full p-2 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400 text-sm"
             required
           />
-          <select
-            name="enrolledCourse"
-            value={formData.enrolledCourse}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-700 rounded-2xl bg-gray-900 text-white"
-            required
-          >
-            <option value="" disabled>
-              Select a course
-            </option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.title}
-              </option>
-            ))}
-          </select>
           <input
             type="number"
             name="progress"
             value={formData.progress}
             onChange={handleChange}
             placeholder="Progress (%)"
-            className="w-full p-3 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400"
+            className="w-full p-2 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400 text-sm"
             min={0}
             max={100}
             required
           />
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              name="avatar"
-              value={formData.avatar}
-              onChange={handleChange}
-              placeholder="Avatar URL (optional)"
-              className="flex-1 p-3 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400"
-            />
-            {formData.avatar && (
-              <div className="w-10 h-10 relative rounded-full overflow-hidden">
-                <Image
-                  src={formData.avatar}
-                  alt={formData.name}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-              </div>
-            )}
-          </div>
+          <input
+            type="text"
+            name="avatar"
+            value={formData.avatar}
+            onChange={handleChange}
+            placeholder="Avatar URL (optional)"
+            className="w-full p-2 border border-gray-700 rounded-2xl bg-gray-900 text-white placeholder-gray-400 text-sm"
+          />
+          {formData.avatar && (
+            <div className="w-12 h-12 relative rounded-full overflow-hidden">
+              <Image
+                src={formData.avatar}
+                alt={formData.name}
+                width={48}
+                height={48}
+                className="rounded-full object-cover"
+              />
+            </div>
+          )}
+          <select
+            name="enrolledCourses"
+            multiple
+            value={formData.enrolledCourses.map(String)}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-700 rounded-2xl bg-gray-900 text-white text-sm"
+          >
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
           <button
             type="submit"
-            className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-colors duration-200 text-sm"
+            className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm transition-colors duration-200"
           >
             Add Student
           </button>

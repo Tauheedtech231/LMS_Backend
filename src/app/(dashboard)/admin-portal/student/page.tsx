@@ -4,20 +4,18 @@ import React, { useEffect, useState } from "react";
 import { Student } from "../types";
 import StudentTable from "../components/StudentTable";
 
-const LOCAL_STORAGE_KEY = "students";
-
 const Students: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate network delay for demonstration
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const data: Student[] = stored ? JSON.parse(stored) : [];
+        const res = await fetch("http://localhost:5000/api/students"); // Backend route
+        if (!res.ok) {
+          throw new Error("Failed to fetch students");
+        }
+        const data: Student[] = await res.json();
         setStudents(data);
       } catch (err) {
         console.error("Error fetching students:", err);
@@ -32,13 +30,11 @@ const Students: React.FC = () => {
   if (loading) {
     return (
       <div className="p-6">
-        {/* Header Skeleton */}
         <div className="animate-pulse mb-6">
           <div className="h-8 bg-gray-300 rounded dark:bg-gray-700 w-48 mb-2"></div>
           <div className="h-4 bg-gray-300 rounded dark:bg-gray-700 w-64"></div>
         </div>
 
-        {/* Table Skeleton */}
         <div className="animate-pulse overflow-hidden rounded-xl shadow-md">
           <div className="w-full overflow-x-auto">
             <div className="grid grid-cols-4 gap-4 px-4 py-3 bg-gray-100 dark:bg-gray-700">

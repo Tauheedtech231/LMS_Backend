@@ -10,7 +10,9 @@ interface StudentProfileProps {
 }
 
 const StudentProfile: React.FC<StudentProfileProps> = ({ student, courses, engagement }) => {
+  console.log("The en",courses)
   const enrolledCourses = student.enrolledCourses?.length
+
     ? courses.filter(course => student.enrolledCourses?.includes(course.id))
     : [];
 
@@ -58,7 +60,7 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student, courses, engag
                           {course.title}
                         </p>
                         <p className="text-xs text-blue-600 dark:text-blue-400">
-                          {course.instructor}
+                          {course.instructor?.name}
                         </p>
                       </div>
                       <span className="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-blue-100">

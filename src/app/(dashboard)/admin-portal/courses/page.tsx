@@ -10,24 +10,31 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
 
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const data: Course[] = stored ? JSON.parse(stored) : [];
-        setCourses(data);
-      } catch (error) {
-        console.error("Failed to load courses:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const res = await fetch("http://localhost:5000/api/courses"); // backend route
+      if (!res.ok) throw new Error("Failed to fetch courses from server");
 
-    fetchCourses();
-  }, []);
+      const data = await res.json();
+      console.log("The data",data)
+
+      // Map backend response to frontend Course type (modules ignore kiya)
+   
+
+      setCourses(data);
+    } catch (err) {
+      console.error("Failed to load courses:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCourses();
+}, []);
+
 
   if (loading) {
     return (

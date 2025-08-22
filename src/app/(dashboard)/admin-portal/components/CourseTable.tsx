@@ -56,7 +56,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses }) => {
                     <p className="text-xs text-blue-500 dark:text-blue-400">{course.description}</p>
                   </div>
                 </td>
-                <td className="px-4 py-2 text-sm">{course.instructor}</td>
+                <td className="px-4 py-2 text-sm">{course.instructor?.name}</td>
                 <td className="px-4 py-2 text-xs">
                   <span className="px-2 py-1 font-medium text-blue-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-blue-100">
                     {course.enrollmentCount}
