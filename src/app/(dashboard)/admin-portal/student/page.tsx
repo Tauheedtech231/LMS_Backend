@@ -16,6 +16,7 @@ const Students: React.FC = () => {
           throw new Error("Failed to fetch students");
         }
         const data: Student[] = await res.json();
+        console.log("The data",data)
         setStudents(data);
       } catch (err) {
         console.error("Error fetching students:", err);

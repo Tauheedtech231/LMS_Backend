@@ -37,6 +37,7 @@ export const getStudents = async (req, res) => {
     const { data: students, error: studentError } = await supabase
       .from("students")
       .select("*");
+      console.log("Students data:", students);
 
     if (studentError) {
       return res.status(500).json({ error: studentError.message });
