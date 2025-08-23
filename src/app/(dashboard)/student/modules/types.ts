@@ -12,5 +12,5 @@ export type Module = {
   description: string;
   materials: Material[];
   progress: number;
-  estimatedTime: string;
+  estimated_time: string;
 };

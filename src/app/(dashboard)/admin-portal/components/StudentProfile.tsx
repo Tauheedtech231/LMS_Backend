@@ -19,14 +19,14 @@ const StudentProfile: React.FC<StudentProfileProps> = ({ student, courses, engag
   return (
     <div className="px-4 py-3 mb-8 bg-white rounded-xl shadow-md dark:bg-gray-800">
       <div className="flex items-center mb-6">
-        <div className="relative w-20 h-20 mr-4 rounded-full border-2 border-blue-600 overflow-hidden">
+        {/* <div className="relative w-20 h-20 mr-4 rounded-full border-2 border-blue-600 overflow-hidden">
           <Image
             src={student.avatar || '/placeholder.png'} // use a local placeholder image
             alt={student.name}
             fill
             className="object-cover"
           />
-        </div>
+        </div> */}
         <div>
           <h2 className="text-xl font-semibold text-blue-800 dark:text-blue-300">
             {student.name}

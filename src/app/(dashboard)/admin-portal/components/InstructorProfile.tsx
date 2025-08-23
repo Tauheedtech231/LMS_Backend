@@ -15,13 +15,13 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({ instructor, cours
     <div className="px-6 py-6 mb-10 bg-white rounded-2xl shadow-lg dark:bg-gray-900 transition-colors">
       {/* Header */}
       <div className="flex items-center mb-8">
-        <div className="relative w-24 h-24 mr-5 rounded-full border-4 border-blue-500 overflow-hidden shadow-md">
+        {/* <div className="relative w-24 h-24 mr-5 rounded-full border-4 border-blue-500 overflow-hidden shadow-md">
           <img
             className="object-cover w-full h-full"
             src={instructor.avatar || "https://via.placeholder.com/150"}
             alt={instructor.name}
           />
-        </div>
+        </div> */}
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             {instructor.name}

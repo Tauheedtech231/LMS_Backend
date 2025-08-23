@@ -54,7 +54,7 @@ const InstructorTable: React.FC<InstructorTableProps> = ({ instructors }) => {
               >
                 <td className="px-3 py-2 text-sm">
                   <div className="flex items-center">
-                    <div className="relative w-8 h-8 mr-2 rounded-full overflow-hidden md:block">
+                    {/* <div className="relative w-8 h-8 mr-2 rounded-full overflow-hidden md:block">
                       <Image
                         src={instructor.avatar || "/placeholder.png"}
                         alt={instructor.name}
@@ -62,7 +62,7 @@ const InstructorTable: React.FC<InstructorTableProps> = ({ instructors }) => {
                         height={32}
                         className="rounded-full object-cover"
                       />
-                    </div>
+                    </div> */}
                     <p className="font-medium text-sm">{instructor.name}</p>
                   </div>
                 </td>

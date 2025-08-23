@@ -1,60 +1,26 @@
 "use client"
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { DashboardHeader } from "@/components/dashboard/header";
+import Sidebar from "@/app/components/Sidebar"
+import Navbar from "@/app/components/navbar"
 
-export default function StudentLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Define sidebar navigation items specific to student role
-  const sidebarNavItems = [
-    {
-      title: "Dashboard",
-      href: "/student",
-      icon: "dashboard",
-    },
-    {
-      title: "Modules",
-      href: "/student/modules",
-      icon: "book",
-    },
-    {
-      title: "Quizzes",
-      href: "/student/quizez",
-      icon: "file",
-    },
-    {
-      title: "Assignments",
-      href: "/student/assignments",
-      icon: "file",
-    },
-    {
-      title: "Progress",
-      href: "/student/progress",
-      icon: "chart",
-    },
-    {
-      title: "Settings",
-      href: "/student/settings",
-      icon: "settings",
-    },
-  ];
-
+export default function StudentLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        {/* Sidebar for navigation */}
-        <Sidebar items={sidebarNavItems} className="hidden md:block" />
-        
-        {/* Main content area */}
-        <div className="flex-1">
-          <DashboardHeader role="Student" />
-          <main className="p-6">{children}</main>
-        </div>
+    <div className="h-screen flex flex-col">
+      {/* Fixed Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Navbar />
       </div>
-    </ThemeProvider>
-  );
+
+      {/* Main Content with Sidebar */}
+      <div className="flex flex-1 pt-16"> {/* pt-16 => Navbar ki height jitna gap */}
+        {/* Sidebar */}
+        <aside className=" shadow-md hidden md:block mt-3">
+          <Sidebar />
+        </aside>
+
+        {/* Page Content */}
+        <main className="flex-1 p-4 overflow-y-auto">{children}</main>
+      </div>
+    </div>
+  )
 }
