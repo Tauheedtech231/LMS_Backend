@@ -1,10 +1,12 @@
 // routes/moduleRoutes.js
-import express from "express";
-import { getModules, getModuleById } from "../controllers/moduleControllers.js";
+
+import express from 'express';
+import { getStudentCourses } from '../controllers/moduleControllers.js'
+;
 
 const router = express.Router();
 
-router.get("/", getModules);      // GET /api/modules
-router.get("/:id", getModuleById); // GET /api/modules/:id
+// Get courses and modules for a student
+router.get('/:studentId', getStudentCourses);
 
 export default router;

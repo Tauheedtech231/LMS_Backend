@@ -16,14 +16,22 @@ export const getStudentById = async (req, res) => {
     if (studentError) throw studentError;
     if (!student) return res.status(404).json({ error: "Student not found" });
 
+    // Fetch enrollments with course details
     const { data: enrollments, error: enrollError } = await supabase
       .from("enrollments")
-      .select("course_id")
+      .select(`
+        course_id,
+        courses:course_id (id, title)
+      `)
       .eq("student_id", id);
 
     if (enrollError) throw enrollError;
 
-    const enrolledCourses = enrollments.map(e => e.course_id);
+    // Map to include course names
+    const enrolledCourses = enrollments.map(e => ({
+      id: e.course_id,
+      title: e.courses.title
+    }));
 
     res.json({ ...student, enrolledCourses });
   } catch (err) {
@@ -31,6 +39,42 @@ export const getStudentById = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch student" });
   }
 };
+export const getStudentsByCourseId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // First get all student IDs enrolled in this course
+    const { data: enrollments, error: enrollError } = await supabase
+      .from("enrollments")
+      .select("student_id")
+      .eq("course_id", id);
+
+    if (enrollError) {
+      return res.status(500).json({ error: enrollError.message });
+    }
+
+    if (!enrollments || enrollments.length === 0) {
+      return res.json([]);
+    }
+
+    // Then fetch those students' details
+    const studentIds = enrollments.map(e => e.student_id);
+    const { data: students, error: studentError } = await supabase
+      .from("students")
+      .select("*")
+      .in("id", studentIds);
+
+    if (studentError) {
+      return res.status(500).json({ error: studentError.message });
+    }
+
+    res.json(students);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch students by course" });
+  }
+};
+
 export const getStudents = async (req, res) => {
   try {
     // Fetch students

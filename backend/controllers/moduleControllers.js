@@ -1,56 +1,52 @@
-// controllers/moduleController.js
-import {supabase} from '../db/supabase.js'
+import { supabase } from "../db/supabase.js"; // apka supabase setup
 
-// ✅ Get all modules
-export const getModules = async (req, res) => {
+export const getStudentCourses = async (req, res) => {
+  const { studentId } = req.params;
+
   try {
-    const { data, error } = await supabase.from("coursemodules").select("id, title, description, estimated_time");
-    if (error) throw error;
-    res.json(data);
+    // 1. Fetch enrolled courses
+    const { data: enrollments, error: enrollError } = await supabase
+      .from('enrollments')
+      .select('course_id')
+      .eq('student_id', studentId);
+
+    if (enrollError) throw enrollError;
+
+    const courseIds = enrollments.map(e => e.course_id);
+
+    if (courseIds.length === 0) {
+      return res.json([]);
+    }
+
+    // 2. Fetch courses details
+    const { data: courses, error: coursesError } = await supabase
+      .from('courses')
+      .select('id, title, description, instructor_id, duration, enrollmentCount')
+      .in('id', courseIds);
+
+    if (coursesError) throw coursesError;
+
+    // 3. Fetch modules for these courses
+    const { data: modules, error: modulesError } = await supabase
+      .from('modules')
+      .select('id, course_id, title, content')
+      .in('course_id', courseIds);
+
+    if (modulesError) throw modulesError;
+
+    // 4. Combine courses with modules
+    const result = courses.map(course => {
+      const courseModules = modules.filter(m => m.course_id === course.id);
+      return {
+        ...course,
+        moduleCount: courseModules.length,
+        modules: courseModules.map(m => ({ id: m.id, title: m.title }))
+      };
+    });
+
+    return res.json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching student courses:', err);
+    return res.status(500).json({ error: 'Server error fetching student courses', details: err.message || err });
   }
 };
-//get module+materials by id
-export const getModuleById = async (req, res) => {
-  try {
-    const { id } = req.params; //ya module_id ha
-    console.log("the id",id)
-
-    const { data: moduleData, error: moduleError } = await supabase
-      .from("coursemodules")
-      .select("id, title, description, estimated_time")
-      .eq("id", id)
-      .single();
-
-    if (moduleError) throw moduleError;
-
-    // fetch materials for this module
-    const { data: materials, error: materialError } = await supabase
-      .from("materials")
-      .select("*")
-      .eq("module_id", id);
-
-    if (materialError) throw materialError;
-    const { data: progressData, error: progressError } = await supabase
-      .from("student_progress")
-      .select("progress,last_accessed")
-       .eq("studentmodule_id",id)
-       .order('last_accessed', { ascending: false })
-       .limit(1)
-      if(progressError){
-        console.log("No progress data found",progressError)
-      }
-     
-    
-     
-
-    res.json({ ...moduleData, materials ,  progress: progressData?.[0]?.progress || 0, 
-  last_accessed: progressData?.[0]?.last_accessed || null });
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: err.message });
-  }
-};
-
-

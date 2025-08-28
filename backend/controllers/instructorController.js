@@ -41,7 +41,7 @@ export const addInstructor = async (req, res) => {
 export const getInstructorWithCoursesById = async (req, res) => {
   try {
     const { id } = req.params; // id from URL params
-    console.log("call hova ha")
+ 
 
     if (!id) {
       return res.status(400).json({ error: "Instructor ID is required" });
